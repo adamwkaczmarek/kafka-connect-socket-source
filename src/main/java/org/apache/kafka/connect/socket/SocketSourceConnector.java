@@ -1,5 +1,6 @@
 package org.apache.kafka.connect.socket;
 
+import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.utils.AppInfoParser;
 import org.apache.kafka.connect.connector.Task;
 import org.apache.kafka.connect.errors.ConnectException;
@@ -30,6 +31,13 @@ public class SocketSourceConnector extends SourceConnector {
     private String schemaName;
     private String batchSize;
     private String topic;
+
+    private static final ConfigDef CONFIG_DEF = new ConfigDef()
+            .define(TOPIC, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, "Destination topic name")
+            .define(SCHEMA_NAME, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, "Schema name")
+            .define(BATCH_SIZE, ConfigDef.Type.INT, ConfigDef.Importance.HIGH, "Batch size")
+            .define(PORT, ConfigDef.Type.INT, ConfigDef.Importance.HIGH, "Socket port");
+
 
     /**
      * Get the version of this connector.
@@ -104,6 +112,11 @@ public class SocketSourceConnector extends SourceConnector {
      */
     @Override
     public void stop() {
+    }
+
+    @Override
+    public ConfigDef config() {
+        return CONFIG_DEF;
     }
 
     private void dumpConfiguration(Map<String, String> map) {
